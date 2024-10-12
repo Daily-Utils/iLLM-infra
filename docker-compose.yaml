@@ -1,0 +1,84 @@
+services:
+  mongo:
+    image: mongo:8.0.1
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: illm
+    volumes:
+      - ./mongo-data:/data/db
+    networks:
+      - illm
+
+  illm-webapp:
+    image: siddh34/illm-webapp:0.0.1
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY}
+    networks:
+      - illm
+
+  illm-express:
+    image: siddh34/illm-express:latest
+    depends_on:
+      - mongo
+      - illm-webapp
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URI: mongodb://root:root@mongo:27017/
+      PORT: ${PORT}
+      FRONTEND_URL: http://illm-webapp:5173
+    networks:
+      - illm
+
+  ollama-llm:
+    image: ollama/ollama:latest
+    ports:
+      - 7869:11434
+    volumes:
+      - .:/code
+      - ./ollama/ollama:/root/.ollama
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: always
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_HOST=0.0.0.0
+    networks:
+      - illm
+
+  go-server:
+    image: siddh34/illm-golang:0.0.1
+    depends_on:
+      - mongo
+      - ollama-llm
+    environment:
+      LLAMA_URL: http://ollama-llm:11434/
+    ports:
+      - "8081:8090"
+    networks:
+      - illm
+
+  illm-flask:
+    image: siddh34/illm-flask
+    depends_on:
+      - mongo
+      - go-server
+    ports:
+      - "5000:5000"
+    environment:
+      GO_SERVER_URL: ${GO-SERVER-URL}
+
+volumes:
+  ollama:
+  mongo-data:
+
+
+networks:
+  illm:
+    driver: bridge
