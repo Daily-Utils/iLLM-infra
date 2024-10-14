@@ -30,12 +30,13 @@ services:
       - illm
 
   go-server:
-    image: siddh34/illm-golang:0.0.1
+    image: siddh34/illm-golang:0.0.3
     depends_on:
       - mongo
       - ollama-llm
     environment:
-      LLAMA_URL: http://ollama-llm:11434/
+      LLAMA_URL: http://ollama-llm:7869/
+      MONGO_URL: mongodb://root:root@mongo:27017/
     ports:
       - "8081:8090"
     networks:
