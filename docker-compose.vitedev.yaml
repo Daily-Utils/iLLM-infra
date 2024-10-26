@@ -43,7 +43,7 @@ services:
       - illm
 
   go-server:
-    image: siddh34/illm-golang:0.0.1
+    image: siddh34/illm-golang:latest
     depends_on:
       - mongo
       - ollama-llm
