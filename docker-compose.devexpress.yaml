@@ -44,7 +44,7 @@ services:
       - mongo
       - ollama-llm
     environment:
-      LLAMA_URL: http://ollama-llm:11434/
+      LLAMA_URL: http://ollama-llm:7869/
     ports:
       - "8081:8090"
     networks:
@@ -58,12 +58,12 @@ services:
     ports:
       - "5000:5000"
     environment:
-      GO_SERVER_URL: ${GO-SERVER-URL}
+      GO_SERVER_URL: http://go-server:8081
+      MODEL: ${MODEL}
 
 volumes:
   ollama:
   mongo-data:
-
 
 networks:
   illm:

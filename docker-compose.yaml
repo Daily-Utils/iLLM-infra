@@ -13,7 +13,7 @@ services:
       - illm
 
   illm-webapp:
-    image: siddh34/illm-webapp:0.0.1
+    image: siddh34/illm-webapp:latest
     ports:
       - "5173:5173"
     environment:
@@ -30,7 +30,7 @@ services:
       - "3000:3000"
     environment:
       MONGO_URI: mongodb://root:root@mongo:27017/
-      PORT: ${PORT}
+      PORT: 3000
       FRONTEND_URL: http://illm-webapp:5173
     networks:
       - illm
@@ -73,7 +73,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      GO_SERVER_URL: ${GO-SERVER-URL}
+      GO_SERVER_URL: http://go-server:8081
       MODEL: ${MODEL}
 
 volumes:
