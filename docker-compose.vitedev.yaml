@@ -18,9 +18,10 @@ services:
       - mongo
     ports:
       - "3000:3000"
+    pull_policy: always
     environment:
       MONGO_URI: mongodb://root:root@mongo:27017/
-      PORT: ${PORT}
+      PORT: 3000
       FRONTEND_URL: http://illm-webapp:5173
     networks:
       - illm
@@ -44,11 +45,12 @@ services:
 
   go-server:
     image: siddh34/illm-golang:latest
+    pull_policy: always
     depends_on:
       - mongo
       - ollama-llm
     environment:
-      LLAMA_URL: http://ollama-llm:7869/
+      LLAMA_URL: http://ollama-llm:11434/
       MONGO_URL: mongodb://root:root@mongo:27017/
 
     ports:
@@ -58,14 +60,17 @@ services:
 
   illm-flask:
     image: siddh34/illm-flask
+    pull_policy: always
     depends_on:
       - mongo
       - go-server
     ports:
       - "5000:5000"
     environment:
-      GO_SERVER_URL: http://go-server:8081
+      GO_SERVER_URL: http://go-server:8090
       MODEL: ${MODEL}
+    networks:
+      - illm
 
 volumes:
   ollama:

@@ -30,19 +30,20 @@ services:
       - illm
 
   illm-flask:
-    image: siddh34/illm-flask
+    image: siddh34/illm-flask:latest
     depends_on:
       - mongo
     ports:
       - "5000:5000"
     environment:
-      GO_SERVER_URL: http://go-server:8081
+      GO_SERVER_URL: http://go-server:8090
       MODEL: ${MODEL}
+    networks:
+      - illm
 
 volumes:
   ollama:
   mongo-data:
-
 
 networks:
   illm:

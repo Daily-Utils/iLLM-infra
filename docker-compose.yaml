@@ -58,7 +58,7 @@ services:
       - mongo
       - ollama-llm
     environment:
-      LLAMA_URL: http://ollama-llm:7869/
+      LLAMA_URL: http://ollama-llm:11434/
       MONGO_URL: mongodb://root:root@localhost:27017/
     ports:
       - "8081:8090"
@@ -66,15 +66,18 @@ services:
       - illm
 
   illm-flask:
-    image: siddh34/illm-flask
+    image: siddh34/illm-flask:latest
+    pull_policy: always
     depends_on:
       - mongo
       - go-server
     ports:
       - "5000:5000"
     environment:
-      GO_SERVER_URL: http://go-server:8081
+      GO_SERVER_URL: http://go-server:8090
       MODEL: ${MODEL}
+    networks:
+      - illm
 
 volumes:
   ollama:

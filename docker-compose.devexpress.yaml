@@ -13,7 +13,8 @@ services:
       - illm
 
   illm-webapp:
-    image: siddh34/illm-webapp:0.0.1
+    image: siddh34/illm-webapp:latest
+    pull_policy: always
     ports:
       - "5173:5173"
     environment:
@@ -39,27 +40,31 @@ services:
       - illm
 
   go-server:
-    image: siddh34/illm-golang:0.0.1
+    image: siddh34/illm-golang:latest
+    pull_policy: always
     depends_on:
       - mongo
       - ollama-llm
     environment:
-      LLAMA_URL: http://ollama-llm:7869/
+      LLAMA_URL: http://ollama-llm:11434/
     ports:
       - "8081:8090"
     networks:
       - illm
 
   illm-flask:
-    image: siddh34/illm-flask
+    image: siddh34/illm-flask:latest
+    pull_policy: always
     depends_on:
       - mongo
       - go-server
     ports:
       - "5000:5000"
     environment:
-      GO_SERVER_URL: http://go-server:8081
+      GO_SERVER_URL: http://go-server:8090
       MODEL: ${MODEL}
+    networks:
+      - illm
 
 volumes:
   ollama:
