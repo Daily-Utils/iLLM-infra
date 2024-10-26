@@ -58,7 +58,7 @@ services:
       - mongo
       - ollama-llm
     environment:
-      LLAMA_URL: http://ollama-llm:11434/
+      LLAMA_URL: http://ollama-llm:7869/
       MONGO_URL: mongodb://root:root@localhost:27017/
     ports:
       - "8081:8090"
